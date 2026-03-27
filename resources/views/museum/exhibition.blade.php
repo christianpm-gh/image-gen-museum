@@ -21,12 +21,12 @@
         <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             @foreach ($exhibition->catalogImages as $image)
                 <article class="museum-panel-soft">
-                    <div class="museum-placeholder aspect-[4/3]">
+                    <div class="museum-placeholder museum-card-media">
                         @if ($image->display_url)
                             <img src="{{ $image->display_url }}" alt="{{ $image->alt_text }}" class="h-full w-full object-cover">
                         @endif
                     </div>
-                    <p class="mt-4 text-lg font-semibold text-white">{{ $image->title }}</p>
+                    <p class="museum-card-title mt-4">{{ $image->title }}</p>
                     <p class="mt-2 text-sm text-slate-300">{{ $image->description }}</p>
                     <div class="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-xs leading-5 text-slate-400">
                         <p><span class="text-slate-200">Paleta:</span> {{ $image->palette }}</p>

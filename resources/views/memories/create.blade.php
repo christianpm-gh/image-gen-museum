@@ -48,14 +48,14 @@
                                             'museum-choice-card-disabled': isDisabled('{{ $image->id }}')
                                         }"
                                     >
-                                        <div class="museum-placeholder aspect-[4/3]">
+                                        <div class="museum-placeholder museum-card-media">
                                             @if ($image->display_url)
                                                 <img src="{{ $image->display_url }}" alt="{{ $image->alt_text }}" class="h-full w-full object-cover">
                                             @endif
                                         </div>
-                                        <div class="mt-4 flex items-start justify-between gap-4">
-                                            <p class="text-lg font-semibold text-white">{{ $image->title }}</p>
-                                            <span class="inline-flex shrink-0 items-center rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300 transition peer-checked:border-sky-300/60 peer-checked:bg-sky-400/10 peer-checked:text-sky-200">
+                                        <div class="museum-card-header mt-4">
+                                            <p class="museum-card-title">{{ $image->title }}</p>
+                                            <span class="inline-flex shrink-0 self-start items-center rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300 transition peer-checked:border-sky-300/60 peer-checked:bg-sky-400/10 peer-checked:text-sky-200">
                                                 <span x-show="! isSelected('{{ $image->id }}')">Disponible</span>
                                                 <span x-show="isSelected('{{ $image->id }}')">Elegida</span>
                                             </span>

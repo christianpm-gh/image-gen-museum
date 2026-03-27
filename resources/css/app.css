@@ -122,6 +122,18 @@ select:focus[data-flux-control] {
         @apply cursor-not-allowed border-slate-800/50 opacity-55 saturate-50;
     }
 
+    .museum-card-media {
+        @apply aspect-[16/10] sm:aspect-[4/3];
+    }
+
+    .museum-card-header {
+        @apply flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between;
+    }
+
+    .museum-card-title {
+        @apply min-w-0 text-base font-semibold leading-snug text-white sm:text-lg;
+    }
+
     .museum-kicker {
         @apply text-xs font-semibold uppercase tracking-[0.3em] text-sky-300;
     }
