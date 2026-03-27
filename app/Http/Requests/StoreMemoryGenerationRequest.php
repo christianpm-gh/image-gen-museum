@@ -21,8 +21,8 @@ class StoreMemoryGenerationRequest extends FormRequest
 
         return [
             'token' => ['required', 'string', 'max:64'],
-            'emotion_text' => ['required', 'string', 'min:10', 'max:400'],
-            'catalog_image_ids' => ['required', 'array', 'size:'.$requiredCount, new ActiveCatalogSelection($requiredCount)],
+            'emotion_text' => ['required', 'string', 'min:10', 'max:280'],
+        'catalog_image_ids' => ['required', 'array', 'size:'.$requiredCount, new ActiveCatalogSelection($requiredCount)],
             'catalog_image_ids.*' => [
                 'required',
                 'integer',

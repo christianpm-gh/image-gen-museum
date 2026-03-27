@@ -12,38 +12,18 @@
         <form
             method="POST"
             action="{{ route('memories.store', $ticket) }}"
-            class="space-y-6 pb-36"
-            x-data="museumSelection.multiLimit({
-                requiredCount: {{ $ticket->requiredCatalogImages() }},
-                initialSelected: @js(collect(old('catalog_image_ids', []))->map(fn ($id) => (string) $id)->values()),
-            })"
+            class="space-y-6 pb-64"
+            x-data="{
+                ...museumSelection.multiLimit({
+                    requiredCount: {{ $ticket->requiredCatalogImages() }},
+                    initialSelected: @js(collect(old('catalog_image_ids', []))->map(fn ($id) => (string) $id)->values()),
+                }),
+                emotionText: @js(old('emotion_text', '')),
+                emotionMax: 280,
+            }"
         >
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">
-
-            <section class="museum-panel">
-                <div class="flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                        <p class="museum-kicker">Selección activa</p>
-                        <p class="mt-2 text-sm font-semibold text-white">
-                            <span x-text="`Seleccionadas ${selectedIds.length}/{{ $ticket->requiredCatalogImages() }}`">Seleccionadas {{ collect(old('catalog_image_ids', []))->count() }}/{{ $ticket->requiredCatalogImages() }}</span>
-                        </p>
-                        <p class="mt-2 text-sm text-slate-300" x-text="helperText()">
-                            Debes seleccionar {{ $ticket->requiredCatalogImages() }} {{ $ticket->requiredCatalogImages() === 1 ? 'imagen' : 'imágenes' }} antes de enviar.
-                        </p>
-                    </div>
-                    <div class="rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-right text-sm text-slate-300">
-                        <p class="text-[11px] uppercase tracking-[0.2em] text-sky-300">Acceso activo</p>
-                        <p class="mt-2 font-semibold text-white">{{ $ticket->ticket_type->label() }}</p>
-                    </div>
-                </div>
-
-                <label for="emotion_text" class="mt-6 block text-sm font-semibold text-white">¿Qué sentiste?</label>
-                <textarea id="emotion_text" name="emotion_text" rows="5" class="mt-3 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100" placeholder="Ejemplo: sentí calma y una nostalgia muy luminosa, como si la sala estuviera respirando conmigo...">{{ old('emotion_text') }}</textarea>
-                @error('emotion_text')
-                    <p class="mt-2 text-sm text-rose-300">{{ $message }}</p>
-                @enderror
-            </section>
 
             <section class="space-y-5">
                 @foreach ($catalogImages as $group => $images)
@@ -113,13 +93,37 @@
 
             <div class="museum-floating-action">
                 <div class="museum-floating-action-shell">
-                    <div class="min-w-0">
+                    <div class="museum-floating-status">
                         <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-300">Recuerdo listo</p>
                         <p class="mt-2 text-sm text-slate-300">
                             <span x-text="`Seleccionadas ${selectedIds.length}/{{ $ticket->requiredCatalogImages() }}`">Seleccionadas {{ collect(old('catalog_image_ids', []))->count() }}/{{ $ticket->requiredCatalogImages() }}</span>
                             <span class="mx-2 text-slate-600">·</span>
                             {{ $ticket->ticket_type->label() }}
                         </p>
+                        <p class="mt-2 text-sm text-slate-400" x-text="helperText()">
+                            Debes seleccionar {{ $ticket->requiredCatalogImages() }} {{ $ticket->requiredCatalogImages() === 1 ? 'imagen' : 'imágenes' }} antes de enviar.
+                        </p>
+                    </div>
+
+                    <div class="museum-floating-field">
+                        <div class="flex items-center justify-between gap-4">
+                            <label for="emotion_text" class="text-sm font-semibold text-white">¿Qué sentiste?</label>
+                            <p class="text-xs text-slate-400">
+                                <span x-text="emotionText.length">0</span>/280
+                            </p>
+                        </div>
+                        <textarea
+                            id="emotion_text"
+                            name="emotion_text"
+                            rows="3"
+                            maxlength="280"
+                            x-model="emotionText"
+                            class="museum-floating-textarea"
+                            placeholder="Escribe una sensación breve, clara y personal sobre tu recorrido..."
+                        >{{ old('emotion_text') }}</textarea>
+                        @error('emotion_text')
+                            <p class="mt-2 text-sm text-rose-300">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <button

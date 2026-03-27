@@ -155,11 +155,23 @@ select:focus[data-flux-control] {
     }
 
     .museum-floating-action-shell {
-        @apply pointer-events-auto mx-auto flex w-full max-w-5xl flex-col gap-4 rounded-[1.75rem] border border-slate-700/80 bg-slate-950/92 px-5 py-4 shadow-[0_-12px_40px_rgba(2,6,23,0.55)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between;
+        @apply pointer-events-auto mx-auto grid w-full max-w-7xl gap-4 rounded-[1.75rem] border border-slate-700/80 bg-slate-950/92 px-5 py-4 shadow-[0_-12px_40px_rgba(2,6,23,0.55)] backdrop-blur-xl lg:grid-cols-[0.95fr_1.35fr_auto] lg:items-center;
+    }
+
+    .museum-floating-status {
+        @apply min-w-0;
+    }
+
+    .museum-floating-field {
+        @apply min-w-0;
+    }
+
+    .museum-floating-textarea {
+        @apply mt-3 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm leading-6 text-slate-100 outline-hidden transition focus:border-sky-300/60 focus:ring-2 focus:ring-sky-300/25;
     }
 
     .museum-floating-submit {
-        @apply w-full sm:w-auto;
+        @apply w-full self-stretch lg:w-auto lg:self-auto;
     }
 
     .museum-placeholder {
