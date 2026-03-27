@@ -16,7 +16,7 @@
             <div class="museum-panel-soft">
                 <p class="text-sm font-semibold text-white">Cómo usarlo</p>
                 <ul class="mt-3 space-y-3 text-sm text-slate-300">
-                    <li>1. Revisa el correo enviado por Mailtrap.</li>
+                    <li>1. Revisa el correo de acceso que acabas de recibir.</li>
                     <li>2. Abre el enlace firmado incluido en el ticket.</li>
                     <li>3. Selecciona la cantidad exacta de referencias permitidas por tu entrada.</li>
                     <li>4. Escribe qué sentiste y envía tu generación.</li>

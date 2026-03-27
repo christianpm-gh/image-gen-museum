@@ -19,7 +19,7 @@
                             <p class="text-2xl font-semibold text-white">{{ $exhibition->title }}</p>
                             <p class="mt-3 museum-copy">{{ $exhibition->summary }}</p>
                         </div>
-                        <span class="museum-tag">{{ $exhibition->catalogImages->count() }} referencias</span>
+                        <span class="museum-tag">{{ $exhibition->catalogImages->count() }} obras</span>
                     </div>
 
                     <div class="mt-5 grid gap-4 sm:grid-cols-2">
@@ -32,8 +32,11 @@
                         @endforeach
                     </div>
 
-                    <div class="mt-5 flex items-center justify-between gap-3">
-                        <p class="text-sm text-slate-300">{{ $exhibition->curator_note }}</p>
+                    <div class="mt-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                        <div class="rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-sm text-slate-300">
+                            <p class="text-[11px] uppercase tracking-[0.2em] text-sky-300">Nota curatorial</p>
+                            <p class="mt-2">{{ $exhibition->curator_note }}</p>
+                        </div>
                         <a href="{{ route('museum.exhibitions.show', $exhibition) }}" class="museum-button-secondary">Ver exposición</a>
                     </div>
                 </article>

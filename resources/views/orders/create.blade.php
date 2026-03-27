@@ -1,10 +1,10 @@
 <x-layouts.app :title="'Comprar entrada'">
     <div class="museum-page">
         <section class="museum-panel">
-            <p class="museum-kicker">Checkout mock</p>
-            <h1 class="museum-heading mt-3">Compra tu acceso al museo</h1>
+            <p class="museum-kicker">Acceso al recorrido</p>
+            <h1 class="museum-heading mt-3">Elige cómo quieres entrar a MusIAum</h1>
             <p class="mt-4 max-w-3xl museum-copy">
-                No hay pasarela real. Al confirmar, la orden se marcará como completada, se emitirá tu ticket y Mailtrap recibirá el correo con el token de acceso al generador.
+                La compra se confirma al instante y tu acceso llega por correo con el enlace listo para abrir el espacio de creación.
             </p>
         </section>
 
@@ -41,7 +41,7 @@
 
                         <div class="space-y-2 text-sm text-slate-300">
                             <p>Imágenes permitidas: {{ $type->requiredCatalogImages() }}</p>
-                            <p>Entrega: correo HTML con ticket mock + token</p>
+                            <p>Entrega: ticket digital con enlace de acceso</p>
                             <p>Acceso: 1 recuerdo exitoso por ticket</p>
                         </div>
 

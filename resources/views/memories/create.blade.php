@@ -32,7 +32,10 @@
                             Debes seleccionar {{ $ticket->requiredCatalogImages() }} {{ $ticket->requiredCatalogImages() === 1 ? 'imagen' : 'imágenes' }} antes de enviar.
                         </p>
                     </div>
-                    <span class="museum-tag whitespace-nowrap">Ticket {{ $ticket->ticket_type->label() }}</span>
+                    <div class="rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-right text-sm text-slate-300">
+                        <p class="text-[11px] uppercase tracking-[0.2em] text-sky-300">Acceso activo</p>
+                        <p class="mt-2 font-semibold text-white">{{ $ticket->ticket_type->label() }}</p>
+                    </div>
                 </div>
 
                 <label for="emotion_text" class="mt-6 block text-sm font-semibold text-white">¿Qué sentiste?</label>
@@ -78,19 +81,23 @@
                                             </span>
                                         </div>
                                         <p class="mt-2 text-sm text-slate-300">{{ $image->description }}</p>
-                                        <div class="mt-4 space-y-1 text-xs leading-5 text-slate-400">
-                                            <p>Autor: {{ $image->creator_name ?? 'No especificado' }}</p>
-                                            @if ($image->creator_url)
-                                                <a href="{{ $image->creator_url }}" target="_blank" rel="noreferrer" class="inline-flex text-sky-300 hover:text-sky-200">Ver autor</a>
-                                            @endif
-                                            <p>Fuente: {{ $image->source_name ?? 'Openverse' }}</p>
-                                            @if ($image->source_url)
-                                                <a href="{{ $image->source_url }}" target="_blank" rel="noreferrer" class="inline-flex text-sky-300 hover:text-sky-200">Ver origen</a>
-                                            @endif
-                                            <p>Licencia: {{ $image->license_name ?? 'Licencia abierta' }}</p>
-                                            @if ($image->license_url)
-                                                <a href="{{ $image->license_url }}" target="_blank" rel="noreferrer" class="inline-flex text-sky-300 hover:text-sky-200">Ver licencia</a>
-                                            @endif
+                                        <div class="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-xs leading-5 text-slate-400">
+                                            <div class="grid gap-2 sm:grid-cols-2">
+                                                <p><span class="text-slate-200">Autor:</span> {{ $image->creator_name ?? 'No especificado' }}</p>
+                                                <p><span class="text-slate-200">Fuente:</span> {{ $image->source_name ?? 'Openverse' }}</p>
+                                                <p class="sm:col-span-2"><span class="text-slate-200">Licencia:</span> {{ $image->license_name ?? 'Licencia abierta' }}</p>
+                                            </div>
+                                            <div class="mt-3 flex flex-wrap gap-3">
+                                                @if ($image->creator_url)
+                                                    <a href="{{ $image->creator_url }}" target="_blank" rel="noreferrer" class="inline-flex text-sky-300 hover:text-sky-200">Ver autor</a>
+                                                @endif
+                                                @if ($image->source_url)
+                                                    <a href="{{ $image->source_url }}" target="_blank" rel="noreferrer" class="inline-flex text-sky-300 hover:text-sky-200">Ver origen</a>
+                                                @endif
+                                                @if ($image->license_url)
+                                                    <a href="{{ $image->license_url }}" target="_blank" rel="noreferrer" class="inline-flex text-sky-300 hover:text-sky-200">Ver licencia</a>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </label>
@@ -110,7 +117,7 @@
                 :disabled="! canSubmit()"
                 :class="{ 'museum-button-disabled': ! canSubmit() }"
             >
-                Enviar a la cola de generación
+                Enviar recuerdo
             </button>
         </form>
     </div>

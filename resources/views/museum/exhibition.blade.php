@@ -4,10 +4,16 @@
             <p class="museum-kicker">{{ $exhibition->museumRoom->title }}</p>
             <h1 class="museum-heading mt-3">{{ $exhibition->title }}</h1>
             <p class="mt-4 max-w-3xl museum-copy">{{ $exhibition->description }}</p>
-            <div class="mt-5 flex flex-wrap gap-3">
-                <span class="museum-tag">{{ $exhibition->summary }}</span>
+            <div class="mt-5 grid gap-3 md:grid-cols-2">
+                <div class="rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-sm text-slate-300">
+                    <p class="text-[11px] uppercase tracking-[0.2em] text-sky-300">Resumen</p>
+                    <p class="mt-2">{{ $exhibition->summary }}</p>
+                </div>
                 @if ($exhibition->curator_note)
-                    <span class="museum-tag">{{ $exhibition->curator_note }}</span>
+                    <div class="rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-sm text-slate-300">
+                        <p class="text-[11px] uppercase tracking-[0.2em] text-sky-300">Nota curatorial</p>
+                        <p class="mt-2">{{ $exhibition->curator_note }}</p>
+                    </div>
                 @endif
             </div>
         </section>
@@ -22,10 +28,10 @@
                     </div>
                     <p class="mt-4 text-lg font-semibold text-white">{{ $image->title }}</p>
                     <p class="mt-2 text-sm text-slate-300">{{ $image->description }}</p>
-                    <p class="mt-3 text-xs uppercase tracking-[0.18em] text-slate-400">{{ $image->palette }}</p>
-                    <div class="mt-4 space-y-1 text-xs leading-5 text-slate-400">
+                    <div class="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-xs leading-5 text-slate-400">
+                        <p><span class="text-slate-200">Paleta:</span> {{ $image->palette }}</p>
                         <p>{{ $image->attribution_text }}</p>
-                        <div class="flex flex-wrap gap-3">
+                        <div class="mt-3 flex flex-wrap gap-3">
                             @if ($image->source_url)
                                 <a href="{{ $image->source_url }}" target="_blank" rel="noreferrer" class="text-sky-300 hover:text-sky-200">Fuente</a>
                             @endif

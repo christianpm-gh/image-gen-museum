@@ -6,10 +6,10 @@
 
         <section class="museum-panel grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <div class="space-y-5">
-                <p class="museum-kicker">Museo conceptual</p>
-                <h1 class="museum-heading">Explora salas, compra tu entrada y transforma una emoción en una imagen.</h1>
+                <p class="museum-kicker">Recorrido curado</p>
+                <h1 class="museum-heading">Explora salas, activa tu acceso y transforma una emoción en un recuerdo visual.</h1>
                 <p class="museum-copy">
-                    Cada ticket da acceso a un recuerdo visual. El estándar permite una referencia; el premium, dos. La experiencia completa vive aquí: recorrido, compra mock, ticket por correo y generación en segundo plano.
+                    Cada entrada abre una forma distinta de mirar el museo. Recorre las salas, encuentra la obra que te acompañe y conviértela en el punto de partida de una imagen íntima.
                 </p>
 
                 <div class="flex flex-wrap gap-3">
@@ -50,11 +50,11 @@
                             @foreach ($room->exhibitions as $exhibition)
                                 <a href="{{ route('museum.exhibitions.show', $exhibition) }}" class="museum-panel-soft block transition hover:border-sky-400/30">
                                     <div class="flex items-start justify-between gap-4">
-                                        <div>
+                                <div>
                                             <p class="text-lg font-semibold text-white">{{ $exhibition->title }}</p>
                                             <p class="mt-2 text-sm text-slate-300">{{ $exhibition->summary }}</p>
                                         </div>
-                                        <span class="museum-tag">{{ $exhibition->catalogImages->count() }} refs</span>
+                                        <span class="museum-tag">{{ $exhibition->catalogImages->count() }} obras</span>
                                     </div>
                                 </a>
                             @endforeach

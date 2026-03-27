@@ -36,9 +36,9 @@
                         </div>
                         <p class="mt-4 font-semibold text-white">{{ $image->title }}</p>
                         <p class="mt-2 text-sm text-slate-300">{{ $image->exhibition->title }}</p>
-                        <div class="mt-3 space-y-1 text-xs leading-5 text-slate-400">
+                        <div class="mt-3 rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-xs leading-5 text-slate-400">
                             <p>{{ $image->attribution_text }}</p>
-                            <div class="flex flex-wrap gap-3">
+                            <div class="mt-3 flex flex-wrap gap-3">
                                 @if ($image->source_url)
                                     <a href="{{ $image->source_url }}" target="_blank" rel="noreferrer" class="text-sky-300 hover:text-sky-200">Fuente</a>
                                 @endif

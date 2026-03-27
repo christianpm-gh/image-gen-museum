@@ -3,7 +3,7 @@
         <section class="museum-panel">
             <p class="museum-kicker">Galería privada</p>
             <h1 class="museum-heading mt-3">Mis recuerdos generados</h1>
-            <p class="mt-4 museum-copy">Aquí se guardan las imágenes procesadas con IA y su contexto emocional.</p>
+            <p class="mt-4 museum-copy">Aquí se guardan tus recuerdos terminados y el estado de los que siguen en proceso.</p>
         </section>
 
         <section class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
