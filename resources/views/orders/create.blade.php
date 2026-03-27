@@ -8,7 +8,12 @@
             </p>
         </section>
 
-        <form method="POST" action="{{ route('orders.store') }}" class="grid gap-6 lg:grid-cols-2">
+        <form
+            method="POST"
+            action="{{ route('orders.store') }}"
+            class="grid gap-6 lg:grid-cols-2"
+            x-data="museumSelection.single({ initialValue: @js(old('ticket_type', $ticketTypes[0]->value ?? '')) })"
+        >
             @csrf
 
             @foreach ($ticketTypes as $type)
@@ -18,9 +23,14 @@
                         name="ticket_type"
                         value="{{ $type->value }}"
                         class="peer sr-only"
+                        x-model="selectedValue"
                         @checked(old('ticket_type', $loop->first ? $type->value : null) === $type->value)
                     >
-                    <div class="museum-choice-card flex h-full flex-col justify-between gap-5 hover:border-sky-400/30">
+                    <div
+                        class="museum-choice-card flex h-full flex-col justify-between gap-5 hover:border-sky-400/30"
+                        :class="{ 'museum-choice-card-active': isSelected(@js($type->value)) }"
+                        @click="select(@js($type->value))"
+                    >
                         <div class="space-y-3">
                             <div class="flex items-center justify-between gap-4">
                                 <span class="text-2xl font-semibold text-white">{{ $type->label() }}</span>
@@ -36,7 +46,8 @@
                         </div>
 
                         <span class="inline-flex w-fit items-center rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-300 transition peer-checked:border-sky-300/60 peer-checked:bg-sky-400/10 peer-checked:text-sky-200">
-                            Seleccionar plan
+                            <span x-show="! isSelected(@js($type->value))">Seleccionar plan</span>
+                            <span x-show="isSelected(@js($type->value))">Plan elegido</span>
                         </span>
                     </div>
                 </label>

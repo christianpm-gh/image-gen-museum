@@ -12,6 +12,7 @@ use App\Models\Ticket;
 use App\Services\TicketAccessValidator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class MemoryGenerationController extends Controller
 {
@@ -50,7 +51,23 @@ class MemoryGenerationController extends Controller
 
         $validator->validateOrFail($request->user(), $ticket, $request->string('token')->toString());
 
-        $memoryGeneration = DB::transaction(function () use ($request, $ticket) {
+        $selectedIds = collect($request->input('catalog_image_ids', []))
+            ->map(fn (mixed $id) => (int) $id)
+            ->unique()
+            ->values();
+
+        $activeSelectedCount = CatalogImage::query()
+            ->whereIn('id', $selectedIds)
+            ->where('is_active', true)
+            ->count();
+
+        if ($activeSelectedCount !== $ticket->requiredCatalogImages()) {
+            throw ValidationException::withMessages([
+                'catalog_image_ids' => 'Solo puedes seleccionar imágenes activas del catálogo y respetar el límite de tu ticket.',
+            ]);
+        }
+
+        $memoryGeneration = DB::transaction(function () use ($request, $ticket, $selectedIds) {
             $lockedTicket = Ticket::query()->with('accessToken')->lockForUpdate()->findOrFail($ticket->id);
 
             if ($lockedTicket->status !== TicketStatus::Issued) {
@@ -67,7 +84,7 @@ class MemoryGenerationController extends Controller
                 'ticket_id' => $lockedTicket->id,
                 'status' => MemoryGenerationStatus::Queued,
                 'emotion_text' => $request->string('emotion_text')->trim()->toString(),
-                'selected_catalog_image_ids' => array_map('intval', $request->input('catalog_image_ids', [])),
+                'selected_catalog_image_ids' => $selectedIds->all(),
                 'queued_at' => now(),
             ]);
         });

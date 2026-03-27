@@ -102,12 +102,24 @@ select:focus[data-flux-control] {
         @apply border-sky-300/80 bg-slate-900 shadow-[0_0_0_1px_rgba(125,211,252,0.22),0_22px_70px_rgba(14,165,233,0.18)];
     }
 
+    .museum-choice-card-active {
+        @apply border-sky-300/80 bg-slate-900 shadow-[0_0_0_1px_rgba(125,211,252,0.22),0_22px_70px_rgba(14,165,233,0.18)];
+    }
+
     .peer:checked + .museum-choice-card::before {
+        @apply border-sky-300/60;
+    }
+
+    .museum-choice-card-active::before {
         @apply border-sky-300/60;
     }
 
     .peer:focus-visible + .museum-choice-card {
         @apply ring-2 ring-sky-300 ring-offset-2 ring-offset-slate-950;
+    }
+
+    .museum-choice-card-disabled {
+        @apply cursor-not-allowed border-slate-800/50 opacity-55 saturate-50;
     }
 
     .museum-kicker {
@@ -128,6 +140,10 @@ select:focus[data-flux-control] {
 
     .museum-button-secondary {
         @apply inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-semibold whitespace-nowrap text-slate-100 transition hover:border-slate-500 hover:bg-slate-800;
+    }
+
+    .museum-button-disabled {
+        @apply cursor-not-allowed border-slate-700 bg-slate-700 text-slate-300 hover:bg-slate-700;
     }
 
     .museum-tag {

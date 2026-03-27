@@ -25,6 +25,13 @@ class CatalogImageFactory extends Factory
             'description' => $this->faker->sentence(),
             'alt_text' => $this->faker->sentence(),
             'palette' => 'azul, gris, blanco',
+            'source_name' => 'Openverse',
+            'source_url' => 'https://openverse.org',
+            'creator_name' => $this->faker->name(),
+            'creator_url' => $this->faker->optional()->url(),
+            'license_name' => 'CC0 1.0',
+            'license_url' => 'https://creativecommons.org/publicdomain/zero/1.0/',
+            'attribution_text' => $this->faker->sentence(),
             'sort_order' => 1,
             'is_active' => true,
         ];
