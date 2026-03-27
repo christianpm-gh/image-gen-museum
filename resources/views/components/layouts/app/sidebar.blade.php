@@ -7,7 +7,7 @@
         <flux:sidebar sticky stashable class="border-r border-slate-800 bg-slate-950/92 backdrop-blur">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('museum.index') }}" class="mr-5 flex items-center space-x-2" wire:navigate>
+            <a href="{{ route('museum.index') }}" class="mr-5 flex items-center" wire:navigate>
                 <x-app-logo />
             </a>
 
@@ -74,8 +74,7 @@
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
             <div class="ml-3">
-                <p class="text-sm font-semibold tracking-[0.22em] text-slate-100">Museo de Recuerdos IA</p>
-                <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Experiencia conceptual</p>
+                <x-app-logo />
             </div>
 
             <flux:spacer />

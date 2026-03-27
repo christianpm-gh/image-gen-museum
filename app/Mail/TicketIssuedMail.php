@@ -24,7 +24,7 @@ class TicketIssuedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Tu entrada al museo está lista',
+            subject: 'Tu acceso a MusIAum ya está listo',
         );
     }
 
