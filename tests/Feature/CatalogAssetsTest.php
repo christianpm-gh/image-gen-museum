@@ -107,6 +107,21 @@ class CatalogAssetsTest extends TestCase
         $this->assertSame(basename($image->source_asset_path), $payload['filename']);
     }
 
+    public function test_display_url_prefers_same_origin_catalog_route_when_local_asset_exists(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $image = CatalogImage::query()->firstOrFail();
+        $image->forceFill([
+            'public_url' => 'https://example.supabase.co/storage/v1/object/public/museum-catalog/catalog/demo/obra.jpg',
+        ])->save();
+
+        $this->assertSame(
+            route('catalog-images.show', $image),
+            $image->fresh()->display_url,
+        );
+    }
+
     public function test_supabase_public_url_is_built_for_catalog_assets(): void
     {
         config()->set('filesystems.disks.museum_catalog.endpoint', 'https://demo-project.storage.supabase.co/storage/v1/s3');

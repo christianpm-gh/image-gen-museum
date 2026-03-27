@@ -49,10 +49,6 @@ class CatalogImage extends Model
 
     public function getDisplayUrlAttribute(): ?string
     {
-        if ($this->public_url) {
-            return $this->public_url;
-        }
-
         $sourcePath = $this->source_asset_path ? base_path($this->source_asset_path) : null;
 
         if ($sourcePath && is_file($sourcePath)) {
@@ -61,6 +57,10 @@ class CatalogImage extends Model
             } catch (\Throwable) {
                 // Fall through to storage/public URL resolution.
             }
+        }
+
+        if ($this->public_url) {
+            return $this->public_url;
         }
 
         if (! $this->storage_disk || ! $this->storage_path) {
