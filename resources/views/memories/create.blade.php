@@ -12,7 +12,7 @@
         <form
             method="POST"
             action="{{ route('memories.store', $ticket) }}"
-            class="space-y-6"
+            class="space-y-6 pb-36"
             x-data="museumSelection.multiLimit({
                 requiredCount: {{ $ticket->requiredCatalogImages() }},
                 initialSelected: @js(collect(old('catalog_image_ids', []))->map(fn ($id) => (string) $id)->values()),
@@ -111,14 +111,27 @@
                 @enderror
             </section>
 
-            <button
-                type="submit"
-                class="museum-button"
-                :disabled="! canSubmit()"
-                :class="{ 'museum-button-disabled': ! canSubmit() }"
-            >
-                Enviar recuerdo
-            </button>
+            <div class="museum-floating-action">
+                <div class="museum-floating-action-shell">
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-300">Recuerdo listo</p>
+                        <p class="mt-2 text-sm text-slate-300">
+                            <span x-text="`Seleccionadas ${selectedIds.length}/{{ $ticket->requiredCatalogImages() }}`">Seleccionadas {{ collect(old('catalog_image_ids', []))->count() }}/{{ $ticket->requiredCatalogImages() }}</span>
+                            <span class="mx-2 text-slate-600">·</span>
+                            {{ $ticket->ticket_type->label() }}
+                        </p>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="museum-button museum-floating-submit"
+                        :disabled="! canSubmit()"
+                        :class="{ 'museum-button-disabled': ! canSubmit() }"
+                    >
+                        Enviar recuerdo
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
 </x-layouts.app>
