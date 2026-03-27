@@ -73,6 +73,9 @@ return [
             'bucket' => env('SUPABASE_CATALOG_BUCKET', env('AWS_BUCKET')),
             'endpoint' => env('SUPABASE_STORAGE_ENDPOINT', env('AWS_ENDPOINT')),
             'use_path_style_endpoint' => env('SUPABASE_USE_PATH_STYLE_ENDPOINT', true),
+            'http' => [
+                'verify' => env('SUPABASE_STORAGE_VERIFY', false),
+            ],
         ],
 
         'generated_memories' => [
@@ -91,6 +94,9 @@ return [
             'bucket' => env('SUPABASE_GENERATED_BUCKET', env('AWS_BUCKET')),
             'endpoint' => env('SUPABASE_STORAGE_ENDPOINT', env('AWS_ENDPOINT')),
             'use_path_style_endpoint' => env('SUPABASE_USE_PATH_STYLE_ENDPOINT', true),
+            'http' => [
+                'verify' => env('SUPABASE_STORAGE_VERIFY', false),
+            ],
         ],
 
     ],

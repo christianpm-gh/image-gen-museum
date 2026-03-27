@@ -20,11 +20,18 @@ class BootstrapMuseumAssets extends Command
             ->get();
 
         foreach ($images as $image) {
-            $assetStorage->publishCatalogAsset($image);
-            $this->components->info("Asset sincronizado: {$image->title}");
+            $publishedImage = $assetStorage->publishCatalogAsset($image);
+
+            if ($publishedImage->storage_path) {
+                $this->components->info("Asset sincronizado: {$image->title}");
+
+                continue;
+            }
+
+            $this->components->warn("Asset disponible solo en local: {$image->title}");
         }
 
-        $this->components->info('Assets del museo sincronizados correctamente.');
+        $this->components->info('Assets del museo preparados correctamente.');
 
         return self::SUCCESS;
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CatalogAssetController;
 use App\Http\Controllers\MemoryGenerationController;
 use App\Http\Controllers\MuseumController;
 use App\Http\Controllers\OrderController;
@@ -10,6 +11,9 @@ use Livewire\Volt\Volt;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('catalogo/imagenes/{catalogImage:slug}', [CatalogAssetController::class, 'show'])
+    ->name('catalog-images.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('dashboard', 'museo')->name('dashboard');

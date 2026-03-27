@@ -22,12 +22,18 @@ class MuseumAssetStorage
             $extension
         );
 
-        Storage::disk($disk)->put($destination, file_get_contents($sourcePath), ['visibility' => 'public']);
+        $uploaded = false;
+
+        try {
+            $uploaded = (bool) Storage::disk($disk)->put($destination, file_get_contents($sourcePath), ['visibility' => 'public']);
+        } catch (\Throwable) {
+            $uploaded = false;
+        }
 
         return tap($catalogImage)->update([
             'storage_disk' => $disk,
-            'storage_path' => $destination,
-            'public_url' => $this->publicUrl($disk, $destination),
+            'storage_path' => $uploaded ? $destination : $catalogImage->storage_path,
+            'public_url' => $uploaded ? $this->publicUrl($disk, $destination) : $catalogImage->public_url,
         ]);
     }
 
@@ -59,6 +65,10 @@ class MuseumAssetStorage
             return null;
         }
 
+        if ($supabaseUrl = $this->supabasePublicUrl($disk, $path)) {
+            return $supabaseUrl;
+        }
+
         try {
             return Storage::disk($disk)->url($path);
         } catch (\Throwable) {
@@ -84,6 +94,15 @@ class MuseumAssetStorage
      */
     public function referenceImagePayload(CatalogImage $catalogImage): array
     {
+        $sourcePath = $catalogImage->source_asset_path ? base_path($catalogImage->source_asset_path) : null;
+
+        if ($sourcePath && is_file($sourcePath)) {
+            return [
+                'contents' => file_get_contents($sourcePath),
+                'filename' => basename($sourcePath) ?: ($catalogImage->slug ?: 'reference').'.png',
+            ];
+        }
+
         if ($catalogImage->storage_disk && $catalogImage->storage_path) {
             return [
                 'contents' => Storage::disk($catalogImage->storage_disk)->get($catalogImage->storage_path),
@@ -102,5 +121,34 @@ class MuseumAssetStorage
         }
 
         throw new \RuntimeException("La imagen de catálogo [{$catalogImage->id}] no tiene fuente utilizable.");
+    }
+
+    private function supabasePublicUrl(string $disk, string $path): ?string
+    {
+        $endpoint = (string) config("filesystems.disks.{$disk}.endpoint", '');
+        $bucket = (string) config("filesystems.disks.{$disk}.bucket", '');
+
+        if ($endpoint === '' || $bucket === '') {
+            return null;
+        }
+
+        $host = parse_url($endpoint, PHP_URL_HOST);
+
+        if (! is_string($host) || ! str_contains($host, 'supabase.co')) {
+            return null;
+        }
+
+        $projectRef = Str::before($host, '.');
+
+        if ($projectRef === '') {
+            return null;
+        }
+
+        return sprintf(
+            'https://%s.supabase.co/storage/v1/object/public/%s/%s',
+            $projectRef,
+            $bucket,
+            ltrim($path, '/')
+        );
     }
 }

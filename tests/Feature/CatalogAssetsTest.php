@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\CatalogImage;
+use App\Services\MuseumAssetStorage;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -42,5 +43,45 @@ class CatalogAssetsTest extends TestCase
             $this->assertNotNull($freshImage->storage_path);
             Storage::disk('museum_catalog')->assertExists($freshImage->storage_path);
         }
+    }
+
+    public function test_catalog_asset_route_serves_versioned_local_images(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $image = CatalogImage::query()->firstOrFail();
+
+        $response = $this->get(route('catalog-images.show', $image))
+            ->assertOk();
+
+        $this->assertStringContainsString(
+            'max-age=86400',
+            (string) $response->headers->get('cache-control')
+        );
+    }
+
+    public function test_reference_image_payload_prefers_local_versioned_asset(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $image = CatalogImage::query()->firstOrFail();
+
+        $payload = app(MuseumAssetStorage::class)->referenceImagePayload($image);
+
+        $this->assertNotEmpty($payload['contents']);
+        $this->assertSame(basename($image->source_asset_path), $payload['filename']);
+    }
+
+    public function test_supabase_public_url_is_built_for_catalog_assets(): void
+    {
+        config()->set('filesystems.disks.museum_catalog.endpoint', 'https://demo-project.storage.supabase.co/storage/v1/s3');
+        config()->set('filesystems.disks.museum_catalog.bucket', 'museum-catalog');
+
+        $url = app(MuseumAssetStorage::class)->publicUrl('museum_catalog', 'catalog/demo/obra.jpg');
+
+        $this->assertSame(
+            'https://demo-project.supabase.co/storage/v1/object/public/museum-catalog/catalog/demo/obra.jpg',
+            $url
+        );
     }
 }
