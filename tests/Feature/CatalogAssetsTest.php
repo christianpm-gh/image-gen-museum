@@ -17,13 +17,13 @@ class CatalogAssetsTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $this->assertCount(8, CatalogImage::query()->where('is_active', true)->get());
+        $this->assertCount(12, CatalogImage::query()->where('is_active', true)->get());
         $this->assertDatabaseMissing('catalog_images', ['source_name' => null]);
         $this->assertDatabaseMissing('catalog_images', ['license_name' => null]);
         $this->assertDatabaseMissing('catalog_images', ['attribution_text' => null]);
     }
 
-    public function test_each_room_keeps_at_least_four_active_images(): void
+    public function test_each_room_keeps_at_least_six_active_images(): void
     {
         $this->seed(DatabaseSeeder::class);
 
@@ -38,7 +38,23 @@ class CatalogAssetsTest extends TestCase
                 ->flatMap->catalogImages
                 ->where('is_active', true);
 
-            $this->assertGreaterThanOrEqual(4, $activeImages->count(), $room->title);
+            $this->assertGreaterThanOrEqual(6, $activeImages->count(), $room->title);
+        }
+    }
+
+    public function test_each_exhibition_stays_between_three_and_five_images(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $exhibitions = \App\Models\Exhibition::query()
+            ->with('catalogImages')
+            ->get();
+
+        foreach ($exhibitions as $exhibition) {
+            $count = $exhibition->catalogImages->where('is_active', true)->count();
+
+            $this->assertGreaterThanOrEqual(3, $count, $exhibition->title);
+            $this->assertLessThanOrEqual(5, $count, $exhibition->title);
         }
     }
 
@@ -54,7 +70,7 @@ class CatalogAssetsTest extends TestCase
 
         $images = CatalogImage::query()->get();
 
-        $this->assertCount(8, $images);
+        $this->assertCount(12, $images);
 
         foreach ($images as $image) {
             $freshImage = $image->fresh();

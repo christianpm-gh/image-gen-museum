@@ -5,11 +5,19 @@ use App\Http\Controllers\MemoryGenerationController;
 use App\Http\Controllers\MuseumController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TicketController;
+use App\Models\CatalogImage;
+use App\Models\MuseumRoom;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Volt\Volt;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'roomCount' => Schema::hasTable('museum_rooms') ? MuseumRoom::query()->count() : 0,
+        'catalogImageCount' => Schema::hasTable('catalog_images')
+            ? CatalogImage::query()->where('is_active', true)->count()
+            : 0,
+    ]);
 })->name('home');
 
 Route::get('catalogo/imagenes/{catalogImage:slug}', [CatalogAssetController::class, 'show'])

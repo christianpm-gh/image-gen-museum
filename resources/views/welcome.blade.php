@@ -39,11 +39,11 @@
 
                     <div class="grid max-w-3xl gap-4 pt-2 sm:grid-cols-3">
                         <div class="museum-panel-soft">
-                            <p class="text-3xl font-bold text-white">2</p>
+                            <p class="text-3xl font-bold text-white">{{ $roomCount }}</p>
                             <p class="mt-2 text-sm text-slate-300">salas listas para explorar</p>
                         </div>
                         <div class="museum-panel-soft">
-                            <p class="text-3xl font-bold text-white">8</p>
+                            <p class="text-3xl font-bold text-white">{{ $catalogImageCount }}</p>
                             <p class="mt-2 text-sm text-slate-300">obras base para combinar</p>
                         </div>
                         <div class="museum-panel-soft">
