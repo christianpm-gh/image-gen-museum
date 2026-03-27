@@ -1,24 +1,14 @@
-# image-gen-museum
+# MusIAum
 
-Aplicacion Laravel para un museo conceptual donde los usuarios compran tickets mock y generan recuerdos visuales con OpenAI a partir de imagenes curadas del catalogo.
+MusIAum es un museo conceptual donde cada entrada abre un recorrido visual y emocional. El proyecto permite explorar salas, activar tickets de prueba y transformar una sensación en un recuerdo generado a partir de obras curadas del catálogo.
 
 ## Que construye este proyecto
 
 - Un museo web con autenticacion, sesiones y panel autenticado.
 - Un flujo de compra mock que emite tickets `standard` o `premium`.
-- Un correo transaccional enviado por Mailtrap cuando la orden se completa.
+- Un correo transaccional de prueba cuando la orden se completa.
 - Un flujo de generacion asincrona de recuerdos visuales usando OpenAI.
 - Persistencia en Supabase Postgres y almacenamiento de assets en Supabase Storage.
-
-## Stack principal
-
-- Laravel 12
-- Livewire / Volt
-- Tailwind CSS
-- Supabase Postgres
-- Supabase Storage via compatibilidad S3
-- Mailtrap
-- OpenAI Images API
 
 ## Clonar el repositorio
 
@@ -103,6 +93,12 @@ El seeder crea un usuario para probar el flujo completo:
 - Email: `demo@example.com`
 - Password: `password`
 
+Si quieres dejarlo limpio sin borrar la cuenta:
+
+```bash
+php artisan museum:reset-demo-user
+```
+
 ## Como abordar el proyecto desde cero
 
 Si quieres entender el sistema sin perderte, esta es la ruta recomendada:
@@ -113,7 +109,8 @@ Si quieres entender el sistema sin perderte, esta es la ruta recomendada:
 4. Sigue el flujo de compra desde [app/Http/Controllers/OrderController.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Http/Controllers/OrderController.php) hacia [app/Services/PurchaseTicketService.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/PurchaseTicketService.php).
 5. Revisa la automatizacion del ticket en [app/Observers/OrderObserver.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Observers/OrderObserver.php) y el correo en [app/Mail/TicketIssuedMail.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Mail/TicketIssuedMail.php).
 6. Sigue el flujo de recuerdos desde [app/Http/Controllers/MemoryGenerationController.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Http/Controllers/MemoryGenerationController.php) hacia [app/Jobs/ProcessMemoryGenerationJob.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Jobs/ProcessMemoryGenerationJob.php).
-7. Por ultimo, entra a los servicios externos en [app/Services/MuseumAssetStorage.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/MuseumAssetStorage.php), [app/Services/OpenAiImageGenerator.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/OpenAiImageGenerator.php) y [app/Services/TicketAccessValidator.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/TicketAccessValidator.php).
+7. Revisa la identidad visual en [resources/views/welcome.blade.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/welcome.blade.php), [resources/views/components/app-logo.blade.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/components/app-logo.blade.php) y [resources/views/components/branding](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/components/branding).
+8. Por ultimo, entra a los servicios externos en [app/Services/MuseumAssetStorage.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/MuseumAssetStorage.php), [app/Services/OpenAiImageGenerator.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/OpenAiImageGenerator.php) y [app/Services/TicketAccessValidator.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/app/Services/TicketAccessValidator.php).
 
 ## Mapa del dominio
 
@@ -182,6 +179,7 @@ Estas son las piezas mas importantes del negocio:
 ### UI y experiencia
 
 - [resources/views/welcome.blade.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/welcome.blade.php)
+- [resources/views/components/branding](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/components/branding)
 - [resources/views/museum](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/museum)
 - [resources/views/orders/create.blade.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/orders/create.blade.php)
 - [resources/views/memories/create.blade.php](/C:/Users/xxcmp/OneDrive/Escritorio/POS/image-gen-museum/resources/views/memories/create.blade.php)
