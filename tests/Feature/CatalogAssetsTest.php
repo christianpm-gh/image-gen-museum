@@ -17,10 +17,29 @@ class CatalogAssetsTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $this->assertCount(6, CatalogImage::query()->where('is_active', true)->get());
+        $this->assertCount(8, CatalogImage::query()->where('is_active', true)->get());
         $this->assertDatabaseMissing('catalog_images', ['source_name' => null]);
         $this->assertDatabaseMissing('catalog_images', ['license_name' => null]);
         $this->assertDatabaseMissing('catalog_images', ['attribution_text' => null]);
+    }
+
+    public function test_each_room_keeps_at_least_four_active_images(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $rooms = \App\Models\MuseumRoom::query()
+            ->with('exhibitions.catalogImages')
+            ->get();
+
+        $this->assertCount(2, $rooms);
+
+        foreach ($rooms as $room) {
+            $activeImages = $room->exhibitions
+                ->flatMap->catalogImages
+                ->where('is_active', true);
+
+            $this->assertGreaterThanOrEqual(4, $activeImages->count(), $room->title);
+        }
     }
 
     public function test_bootstrap_command_syncs_all_real_catalog_assets(): void
@@ -35,7 +54,7 @@ class CatalogAssetsTest extends TestCase
 
         $images = CatalogImage::query()->get();
 
-        $this->assertCount(6, $images);
+        $this->assertCount(8, $images);
 
         foreach ($images as $image) {
             $freshImage = $image->fresh();

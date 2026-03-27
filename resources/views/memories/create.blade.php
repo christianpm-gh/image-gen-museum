@@ -84,7 +84,7 @@
                                         <div class="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/65 px-4 py-3 text-xs leading-5 text-slate-400">
                                             <div class="grid gap-2 sm:grid-cols-2">
                                                 <p><span class="text-slate-200">Autor:</span> {{ $image->creator_name ?? 'No especificado' }}</p>
-                                                <p><span class="text-slate-200">Fuente:</span> {{ $image->source_name ?? 'Openverse' }}</p>
+                                                <p><span class="text-slate-200">Fuente:</span> {{ $image->source_name ?? 'Archivo curado' }}</p>
                                                 <p class="sm:col-span-2"><span class="text-slate-200">Licencia:</span> {{ $image->license_name ?? 'Licencia abierta' }}</p>
                                             </div>
                                             <div class="mt-3 flex flex-wrap gap-3">
