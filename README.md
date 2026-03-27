@@ -1,5 +1,7 @@
 # MusIAum
 
+![Logo de MusIAum](docs/musiaum-logo.svg)
+
 MusIAum es un museo conceptual donde cada entrada abre un recorrido visual y emocional. El proyecto permite explorar salas, activar tickets de prueba y transformar una sensación en un recuerdo generado a partir de obras curadas del catálogo.
 
 ## Que construye este proyecto
@@ -82,7 +84,7 @@ php artisan museum:bootstrap-assets
 
 Las referencias del museo viven versionadas en `database/seeders/assets` para que el bootstrap sea reproducible y no dependa de URLs externas en tiempo de ejecución.
 
-- Las imagenes reales del catalogo fueron curadas con Openverse y se guardan con atribucion visible.
+- Las imagenes reales del catalogo fueron curadas a partir de Wikimedia Commons y archivos institucionales de libre uso.
 - La metadata de fuente, autor y licencia se siembra en `catalog_images`.
 - Si reemplazas una imagen, actualiza tanto el archivo local como su atribucion antes de ejecutar `php artisan migrate --seed` y `php artisan museum:bootstrap-assets`.
 

@@ -1,0 +1,14 @@
+<svg width="720" height="180" viewBox="0 0 720 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">MusIAum</title>
+  <desc id="desc">Logotipo de MusIAum con un isotipo abstracto de museo y un wordmark horizontal.</desc>
+  <rect x="14" y="18" width="144" height="144" rx="42" fill="#081225" stroke="#274A6A" stroke-width="4"/>
+  <path d="M43 63L86 34L129 63V70H43V63Z" fill="#8FD6FF" fill-opacity="0.92"/>
+  <path d="M50 79H122V137C122 143.627 116.627 149 110 149H62C55.3726 149 50 143.627 50 137V79Z" fill="#0E2038"/>
+  <path d="M71 79H101V149H71V79Z" fill="#102C48"/>
+  <path d="M78 98C78 93.5817 81.5817 90 86 90C90.4183 90 94 93.5817 94 98V149H78V98Z" fill="#7DD3FC" fill-opacity="0.88"/>
+  <path d="M56 88H67V134H56V88Z" fill="#BFE7FF" fill-opacity="0.38"/>
+  <path d="M105 88H116V134H105V88Z" fill="#BFE7FF" fill-opacity="0.38"/>
+  <circle cx="86" cy="51" r="6" fill="#E0F2FE"/>
+  <text x="196" y="86" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="700" letter-spacing="3">MusIAum</text>
+  <text x="198" y="120" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="20" letter-spacing="6">ARCHIVO EMOCIONAL</text>
+</svg>
