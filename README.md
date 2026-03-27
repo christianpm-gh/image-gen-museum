@@ -88,6 +88,14 @@ Despues sube los assets curados con:
 php artisan museum:bootstrap-assets
 ```
 
+## Curacion del catalogo visual
+
+Las referencias del museo viven versionadas en `database/seeders/assets` para que el bootstrap sea reproducible y no dependa de URLs externas en tiempo de ejecución.
+
+- Las imagenes reales del catalogo fueron curadas con Openverse y se guardan con atribucion visible.
+- La metadata de fuente, autor y licencia se siembra en `catalog_images`.
+- Si reemplazas una imagen, actualiza tanto el archivo local como su atribucion antes de ejecutar `php artisan migrate --seed` y `php artisan museum:bootstrap-assets`.
+
 ## Usuario demo
 
 El seeder crea un usuario para probar el flujo completo:
