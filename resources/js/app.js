@@ -1,5 +1,3 @@
-import Alpine from 'alpinejs';
-
 window.museumSelection = {
     single({ initialValue = '' } = {}) {
         return {
@@ -43,7 +41,3 @@ window.museumSelection = {
         };
     },
 };
-
-window.Alpine = Alpine;
-
-Alpine.start();
