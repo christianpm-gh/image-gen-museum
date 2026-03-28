@@ -4,19 +4,21 @@ namespace App\Services;
 
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Http\Client\RequestException;
+use Throwable;
 
 class OpenAiImageGenerator
 {
+    protected ?string $lastAttemptedModel = null;
+
     public function __construct(
         protected HttpFactory $http,
     ) {
     }
 
     /**
-     * @param  list<array{contents:string, filename:string}>  $referenceImages
      * @return array{binary:string, mime:string, model:string, revised_prompt:?string}
      */
-    public function generate(array $referenceImages, string $prompt): array
+    public function generate(string $prompt): array
     {
         $models = array_values(array_filter([
             config('services.openai.image_model'),
@@ -26,46 +28,45 @@ class OpenAiImageGenerator
         $lastException = null;
 
         foreach ($models as $model) {
+            $this->lastAttemptedModel = $model;
+
             try {
-                return $this->sendEditRequest($model, $referenceImages, $prompt);
-            } catch (\Throwable $exception) {
+                return $this->sendGenerationRequest($model, $prompt);
+            } catch (Throwable $exception) {
                 $lastException = $exception;
             }
         }
 
-        throw $lastException ?? new \RuntimeException('No fue posible generar la imagen con OpenAI.');
+        if ($lastException instanceof Throwable) {
+            throw new \RuntimeException($this->summarizeFailure($lastException), 0, $lastException);
+        }
+
+        throw new \RuntimeException('No fue posible generar la imagen con OpenAI.');
+    }
+
+    public function lastAttemptedModel(): ?string
+    {
+        return $this->lastAttemptedModel;
     }
 
     /**
-     * @param  list<array{contents:string, filename:string}>  $referenceImages
      * @return array{binary:string, mime:string, model:string, revised_prompt:?string}
      */
-    protected function sendEditRequest(string $model, array $referenceImages, string $prompt): array
+    protected function sendGenerationRequest(string $model, string $prompt): array
     {
-        $multipart = [
-            ['name' => 'model', 'contents' => $model],
-            ['name' => 'prompt', 'contents' => $prompt],
-            ['name' => 'size', 'contents' => (string) config('services.openai.image_size', '1536x1024')],
-            ['name' => 'quality', 'contents' => (string) config('services.openai.image_quality', 'high')],
-            ['name' => 'response_format', 'contents' => 'b64_json'],
-            ['name' => 'output_format', 'contents' => 'png'],
-        ];
-
-        foreach ($referenceImages as $index => $referenceImage) {
-            $multipart[] = [
-                'name' => 'image[]',
-                'contents' => $referenceImage['contents'],
-                'filename' => $referenceImage['filename'] ?: 'reference-'.$index.'.png',
-            ];
-        }
-
         $response = $this->http
             ->baseUrl(rtrim(config('services.openai.base_url', 'https://api.openai.com/v1'), '/'))
             ->withToken(config('services.openai.api_key'))
             ->timeout((int) config('services.openai.timeout', 120))
             ->acceptJson()
-            ->send('POST', '/images/edits', [
-                'multipart' => $multipart,
+            ->asJson()
+            ->post('/images/generations', [
+                'model' => $model,
+                'prompt' => $prompt,
+                'size' => (string) config('services.openai.image_size', '1536x1024'),
+                'quality' => (string) config('services.openai.image_quality', 'high'),
+                'response_format' => 'b64_json',
+                'output_format' => 'png',
             ]);
 
         $response->throw();
@@ -74,7 +75,7 @@ class OpenAiImageGenerator
         $image = $payload['data'][0]['b64_json'] ?? null;
 
         if (! is_string($image) || $image === '') {
-            throw new RequestException($response);
+            throw new \RuntimeException('OpenAI no devolvió una imagen utilizable en la respuesta.');
         }
 
         return [
@@ -83,5 +84,28 @@ class OpenAiImageGenerator
             'model' => $model,
             'revised_prompt' => $payload['data'][0]['revised_prompt'] ?? null,
         ];
+    }
+
+    protected function summarizeFailure(Throwable $exception): string
+    {
+        $modelNote = $this->lastAttemptedModel ? ' Modelo: '.$this->lastAttemptedModel.'.' : '';
+
+        if ($exception instanceof RequestException && $exception->response !== null) {
+            $status = $exception->response->status();
+            $detail = $exception->response->json('error.message');
+
+            if (is_string($detail) && $detail !== '') {
+                return sprintf(
+                    'OpenAI devolvió un error HTTP %s al generar el recuerdo.%s %s',
+                    $status,
+                    $modelNote,
+                    trim($detail)
+                );
+            }
+
+            return sprintf('OpenAI devolvió un error HTTP %s al generar el recuerdo.%s', $status, $modelNote);
+        }
+
+        return 'No fue posible generar el recuerdo visual con OpenAI.'.$modelNote;
     }
 }

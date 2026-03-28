@@ -30,8 +30,7 @@ class ProcessMemoryGenerationJobTest extends TestCase
         [$memory] = $this->makeQueuedGeneration();
 
         Http::fake([
-            'https://images.example.test/*' => Http::response('reference-image', 200),
-            'https://api.openai.com/*' => Http::response([
+            'https://api.openai.com/v1/images/generations' => Http::response([
                 'data' => [[
                     'b64_json' => base64_encode('generated-image'),
                     'revised_prompt' => 'prompt revisado',
@@ -47,11 +46,18 @@ class ProcessMemoryGenerationJobTest extends TestCase
             app(\App\Services\MemoryPromptBuilder::class),
         );
 
+        Http::assertSent(function ($request) {
+            return $request->url() === 'https://api.openai.com/v1/images/generations'
+                && $request['prompt'] !== null
+                && ! str_contains($request->body(), 'image[]');
+        });
+
         $memory->refresh();
 
         $this->assertSame(MemoryGenerationStatus::Completed, $memory->status);
         $this->assertNotNull($memory->generated_path);
         $this->assertSame(TicketStatus::Consumed, $memory->ticket->fresh()->status);
+        $this->assertSame('text_prompt', $memory->metadata['generation_mode']);
     }
 
     public function test_job_failure_releases_ticket_again(): void
@@ -59,8 +65,11 @@ class ProcessMemoryGenerationJobTest extends TestCase
         [$memory] = $this->makeQueuedGeneration();
 
         Http::fake([
-            'https://images.example.test/*' => Http::response('reference-image', 200),
-            'https://api.openai.com/*' => Http::response(['error' => 'boom'], 500),
+            'https://api.openai.com/v1/images/generations' => Http::response([
+                'error' => [
+                    'message' => 'insufficient credits',
+                ],
+            ], 429),
         ]);
 
         config()->set('services.openai.api_key', 'test-key');
@@ -78,6 +87,9 @@ class ProcessMemoryGenerationJobTest extends TestCase
 
         $this->assertSame(MemoryGenerationStatus::Failed, $memory->status);
         $this->assertSame(TicketStatus::Issued, $memory->ticket->fresh()->status);
+        $this->assertSame('text_prompt', $memory->metadata['generation_mode']);
+        $this->assertSame(config('services.openai.image_fallback_model'), $memory->metadata['attempted_model']);
+        $this->assertStringContainsString('HTTP 429', $memory->error_message);
     }
 
     /**

@@ -48,10 +48,7 @@ class ProcessMemoryGenerationJob implements ShouldQueue
 
         try {
             $prompt = $promptBuilder->build($memoryGeneration, $catalogImages);
-            $result = $imageGenerator->generate(
-                $catalogImages->map(fn (CatalogImage $image) => $assetStorage->referenceImagePayload($image))->values()->all(),
-                $prompt
-            );
+            $result = $imageGenerator->generate($prompt);
 
             $stored = $assetStorage->storeGeneratedImage($memoryGeneration->load('ticket'), $result['binary']);
 
@@ -64,6 +61,7 @@ class ProcessMemoryGenerationJob implements ShouldQueue
                     'generated_url' => $stored['url'],
                     'provider_model' => $result['model'],
                     'metadata' => array_filter([
+                        'generation_mode' => 'text_prompt',
                         'revised_prompt' => $result['revised_prompt'],
                     ]),
                     'completed_at' => now(),
@@ -80,10 +78,17 @@ class ProcessMemoryGenerationJob implements ShouldQueue
                 ]);
             });
         } catch (\Throwable $exception) {
-            DB::transaction(function () use ($memoryGeneration, $exception) {
+            DB::transaction(function () use ($memoryGeneration, $exception, $imageGenerator) {
                 $memoryGeneration->update([
                     'status' => MemoryGenerationStatus::Failed,
+                    'provider_model' => $imageGenerator->lastAttemptedModel(),
                     'error_message' => $exception->getMessage(),
+                    'metadata' => array_filter([
+                        'generation_mode' => 'text_prompt',
+                        'attempted_model' => $imageGenerator->lastAttemptedModel(),
+                        'image_size' => config('services.openai.image_size'),
+                        'image_quality' => config('services.openai.image_quality'),
+                    ]),
                     'completed_at' => now(),
                 ]);
 
