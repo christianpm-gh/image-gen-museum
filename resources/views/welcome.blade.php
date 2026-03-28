@@ -4,36 +4,36 @@
         @include('partials.head', ['title' => 'MusIAum'])
     </head>
     <body class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.2),_transparent_36%),linear-gradient(180deg,_#020617_0%,_#0f172a_48%,_#020617_100%)] text-slate-100">
-        <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-between px-6 py-8 lg:px-10">
-            <div class="flex items-center justify-between">
+        <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-between overflow-x-clip px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <x-app-logo />
 
-                <div class="flex items-center gap-3">
+                <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
                     @auth
-                        <a href="{{ route('museum.index') }}" class="museum-button-secondary">Entrar al museo</a>
+                        <a href="{{ route('museum.index') }}" class="museum-button-secondary w-full sm:w-auto">Entrar al museo</a>
                     @else
-                        <a href="{{ route('login') }}" class="museum-button-secondary">Iniciar sesión</a>
-                        <a href="{{ route('register') }}" class="museum-button">Crear cuenta</a>
+                        <a href="{{ route('login') }}" class="museum-button-secondary w-full sm:w-auto">Iniciar sesión</a>
+                        <a href="{{ route('register') }}" class="museum-button w-full sm:w-auto">Crear cuenta</a>
                     @endauth
                 </div>
             </div>
 
-            <section class="grid gap-10 py-16 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+            <section class="grid gap-8 py-10 sm:gap-10 sm:py-14 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:py-16">
                 <div class="space-y-6">
                     <p class="museum-kicker">Museo abstracto de recuerdos</p>
-                    <h1 class="text-5xl font-bold leading-tight tracking-tight text-white sm:text-6xl">
+                    <h1 class="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
                         MusIAum convierte un recorrido emocional en una imagen que solo existe una vez.
                     </h1>
-                    <p class="max-w-2xl text-lg leading-8 text-slate-300">
+                    <p class="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
                         Recorre salas conceptuales, elige una entrada y deja que una selección de obras curadas y tu propia sensación se conviertan en un recuerdo visual íntimo.
                     </p>
 
-                    <div class="flex flex-wrap gap-3">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                         @auth
-                            <a href="{{ route('museum.index') }}" class="museum-button">Abrir museo</a>
+                            <a href="{{ route('museum.index') }}" class="museum-button w-full sm:w-auto">Abrir museo</a>
                         @else
-                            <a href="{{ route('register') }}" class="museum-button">Comenzar recorrido</a>
-                            <a href="{{ route('login') }}" class="museum-button-secondary">Ya tengo cuenta</a>
+                            <a href="{{ route('register') }}" class="museum-button w-full sm:w-auto">Comenzar recorrido</a>
+                            <a href="{{ route('login') }}" class="museum-button-secondary w-full sm:w-auto">Ya tengo cuenta</a>
                         @endauth
                     </div>
 
@@ -53,9 +53,9 @@
                     </div>
                 </div>
 
-                <div class="museum-placeholder rounded-[2rem] p-6 shadow-[0_30px_120px_rgba(14,165,233,0.18)]">
-                    <div class="relative z-10 space-y-5 rounded-[1.5rem] border border-slate-700/60 bg-slate-950/70 p-6">
-                        <div class="flex items-center gap-4">
+                <div class="museum-placeholder mx-auto w-full max-w-md rounded-[2rem] p-4 shadow-[0_30px_120px_rgba(14,165,233,0.18)] sm:p-6 lg:max-w-none">
+                    <div class="relative z-10 space-y-4 rounded-[1.5rem] border border-slate-700/60 bg-slate-950/70 p-4 sm:space-y-5 sm:p-6">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
                             <x-branding.atrium-mark class="h-16 w-16 shrink-0" />
                             <div>
                                 <p class="museum-kicker">Identidad principal</p>
