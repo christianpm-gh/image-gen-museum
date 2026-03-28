@@ -76,7 +76,6 @@ class OpenAiImageGenerator
                 'prompt' => $prompt,
                 'size' => (string) config('services.openai.image_size', '1536x1024'),
                 'quality' => (string) config('services.openai.image_quality', 'high'),
-                'response_format' => 'b64_json',
                 'output_format' => 'png',
             ]);
 
