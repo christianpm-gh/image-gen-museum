@@ -43,6 +43,7 @@ return [
         'image_size' => env('OPENAI_IMAGE_SIZE', '1536x1024'),
         'image_quality' => env('OPENAI_IMAGE_QUALITY', 'high'),
         'timeout' => (int) env('OPENAI_TIMEOUT', 120),
+        'ca_bundle' => env('OPENAI_CA_BUNDLE'),
     ],
 
 ];

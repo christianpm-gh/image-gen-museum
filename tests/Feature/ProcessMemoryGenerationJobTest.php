@@ -15,6 +15,7 @@ use App\Models\Order;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -90,6 +91,33 @@ class ProcessMemoryGenerationJobTest extends TestCase
         $this->assertSame('text_prompt', $memory->metadata['generation_mode']);
         $this->assertSame(config('services.openai.image_fallback_model'), $memory->metadata['attempted_model']);
         $this->assertStringContainsString('HTTP 429', $memory->error_message);
+    }
+
+    public function test_job_failure_persists_connection_error_detail(): void
+    {
+        [$memory] = $this->makeQueuedGeneration();
+
+        Http::fake(function () {
+            throw new ConnectionException('SSL certificate problem: unable to get local issuer certificate');
+        });
+
+        config()->set('services.openai.api_key', 'test-key');
+
+        try {
+            (new ProcessMemoryGenerationJob($memory->id))->handle(
+                app(\App\Services\OpenAiImageGenerator::class),
+                app(\App\Services\MuseumAssetStorage::class),
+                app(\App\Services\MemoryPromptBuilder::class),
+            );
+        } catch (\Throwable) {
+        }
+
+        $memory->refresh();
+
+        $this->assertSame(MemoryGenerationStatus::Failed, $memory->status);
+        $this->assertStringContainsString('No fue posible conectar con OpenAI.', $memory->error_message);
+        $this->assertStringContainsString('unable to get local issuer certificate', $memory->error_message);
+        $this->assertSame('text_prompt', $memory->metadata['generation_mode']);
     }
 
     /**

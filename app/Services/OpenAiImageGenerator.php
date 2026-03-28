@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Http\Client\RequestException;
 use Throwable;
@@ -54,12 +55,22 @@ class OpenAiImageGenerator
      */
     protected function sendGenerationRequest(string $model, string $prompt): array
     {
-        $response = $this->http
+        $request = $this->http
             ->baseUrl(rtrim(config('services.openai.base_url', 'https://api.openai.com/v1'), '/'))
             ->withToken(config('services.openai.api_key'))
             ->timeout((int) config('services.openai.timeout', 120))
             ->acceptJson()
-            ->asJson()
+            ->asJson();
+
+        $caBundle = config('services.openai.ca_bundle');
+
+        if (is_string($caBundle) && $caBundle !== '') {
+            $request = $request->withOptions([
+                'verify' => $caBundle,
+            ]);
+        }
+
+        $response = $request
             ->post('/images/generations', [
                 'model' => $model,
                 'prompt' => $prompt,
@@ -104,6 +115,14 @@ class OpenAiImageGenerator
             }
 
             return sprintf('OpenAI devolvió un error HTTP %s al generar el recuerdo.%s', $status, $modelNote);
+        }
+
+        if ($exception instanceof ConnectionException) {
+            return sprintf(
+                'No fue posible conectar con OpenAI.%s %s',
+                $modelNote,
+                trim($exception->getMessage())
+            );
         }
 
         return 'No fue posible generar el recuerdo visual con OpenAI.'.$modelNote;
